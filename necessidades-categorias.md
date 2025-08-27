@@ -14,13 +14,15 @@ A placa principal (Main) é a única que tem um microcontrolador (STM32H753), o 
 - Comunicação SPI com o rádio.
   - Velocidade de comunicação de 6,25 MBits/s.
   - Atualmente, usa-se apenas 1 rádio (recebe informação do computador da COMP). Futuramente, pensa-se em colocar mais um rádio na placa ou então programar o já existente no robô para fazer telemetria.
-
-- Comunicação com a IMU por SPI.
-  - Acionamento de leitura baseado em interrupção.
-  - Está sendo implementada.
+  - O rádio é um nRF24L01+ e envia (não sabemos a latência exatamente) duas mensagens de 32 bytes. Cada pacote de 32 bytes contém comandos para 3 robôs. Até não muito tempo atrás, a COMP enviava 34 bytes (2 bytes 0xFF de "confirmação" + 32 bytes de mensagem) para a estação de rádio via UART (a estação é uma placa contendo uma NUCLEO). Como temos 4 robôs, agora a COMP envia 66 bytes (2 bytes 0xFF + 2 pacotes de 32 bytes): a estação verifica os bytes 0xFF, quebra o "bloco" de 64 bytes em 2 pacotes de 32 e envia cada um separadamente. Sobre a latência, o que se sabe é que a COMP envia comandos a 60 Hz. A latência seria a soma USB entre a COMP e a estação + estação + rádio.
 
 - Controle dos motores das rodas.
   - Roda em 200 Hz.
+
+- Comunicação com a IMU por SPI.
+  - Acionamento de leitura baseado em interrupção.
+  - A ideia é utilizar uma IMU para estimar melhor o ângulo de rotação do robô e não depender apenas da previsão da COMP com base na câmera em cima do campo.
+  - Está sendo implementada ainda. Não foi definida a frequência de amostragem. O mínimo necessário é em torno de 60 Hz (taxa de envio de comandos da COMP) e o máximo seria os 200 Hz do controle. A ideia é usar a leitura da IMU como correção da medida da COMP em um Filtro de Kalman 1D.
 
 - Circuito com USB para debug via protocolo UART.
   - Velocidade de comunicação de 115200 Bits/s.
@@ -28,8 +30,11 @@ A placa principal (Main) é a única que tem um microcontrolador (STM32H753), o 
 - Filtro de Kalman para os motores e para a IMU.
   - Ainda não foi implementado, mas a ideia é usar a leitura da IMU na etapa de correção de medida no filtro para melhorar a estimativa da velocidade angular vinda da COMP (que é atualizada numa taxa próxima de 60 Hz).
   
-- PWM para os motores das rodas.
-  - Pinos DIR, DIRO, TACHO e PWM.
+- Leitura de encoders dos motores das rodas
+  - Pino DIR (GPIO_Output): comanda o sentido de rotação da roda.
+  - Pino DIRO (GPIO_Input): mesma ideia do DIR, mas como feedback.
+  - Pino TACHO (GPIO_EXT): a cada rotação parcial da roda, é contado um pulso. A contagem (frequência) desses pulsos informa a velocidade das rodas. Em resumo, leitura da velocidade instantânea.
+  - Pino PWM (Timer): para ler a velocidade média.
   - Atualmente usamos um sensor HALL, mas estamos migrando para encoders.
 
 - Comunicação GPIO com 3 botões presentes na Main.
@@ -47,6 +52,9 @@ Resumo dos periféricos do STM32H753 utilizados:
 - SPI
 - I2C
 - GPIO
+- ADC
+- PWM
+- Flash QSPI
 
 # VSS
 
