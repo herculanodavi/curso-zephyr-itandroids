@@ -58,6 +58,24 @@ Resumo dos periféricos do STM32H753 utilizados:
 
 # VSS
 
+A placa utilizada possui o icrocontrolador STM32F446RCTx e, para comunicação via rádio, usa-se o módulo nRF24L01. Assim como no SSL, também é utilizado o sistema operacional FreeRTOS para algumas tarefas:
+
+- Exibir parâmetros de Health do robô em uma tela LCD
+- Controle baseado em DLQR/ DLQI (DLQI precisa ser otimizado)
+- Armazena dados do robô no cartão SD para montagem da malha de controle (quando código foi migrado para o FreeRTOS não foi possível implementar da mesma forma)
+- IMU está sendo implementada
+
+Novo projeto de módulo de rádio mais compacto:
+-Firmware está sendo implementado para uma comunicação mais eficiente
+
+Resumo dos periféricos utilizados:
+- LCD
+- UART
+- I2C
+- SPI
+- ADC
+- GPIO
+
 # Humanoid
 
 O único dispositivo que tem firmware embarcado escrito pela ITAndroids é a CMB. Ela precisa fazer as seguintes tarefas, de modo geral:
