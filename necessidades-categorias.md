@@ -58,12 +58,16 @@ Resumo dos periféricos do STM32H753 utilizados:
 
 # VSS
 
-A placa utilizada possui o icrocontrolador STM32F446RCTx e, para comunicação via rádio, usa-se o módulo nRF24L01. Assim como no SSL, também é utilizado o sistema operacional FreeRTOS para algumas tarefas:
+A placa utilizada possui o microcontrolador STM32F446RCTx e, para comunicação via rádio, usa-se um micro STM32F103C8T6 + o módulo nRF24L01. Assim como no SSL, também é utilizado o sistema operacional FreeRTOS para algumas tarefas:
 
 - Exibir parâmetros de Health do robô em uma tela LCD
+  - Tela I2C SSD1306 128x32
 - Controle baseado em DLQR/ DLQI (DLQI precisa ser otimizado)
+  - Frequência da malha de controle: 1 kHz
+  - Utiliza-se encoder IE-512 para as rodas
 - Armazena dados do robô no cartão SD para montagem da malha de controle (quando código foi migrado para o FreeRTOS não foi possível implementar da mesma forma)
-- IMU está sendo implementada
+  - SDIO (baseado no arquivo stm324x9i_eval_sd.c da STM32CubeIDE)
+- IMU está sendo implementada (LSM6DSO32, protocolo I2C)
 
 Novo projeto de módulo de rádio mais compacto:
 -Firmware está sendo implementado para uma comunicação mais eficiente
