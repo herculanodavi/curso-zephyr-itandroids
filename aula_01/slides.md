@@ -15,7 +15,7 @@ paginate: true
 - O que é um OS (Sistema Operational)?
 - O que é um RTOS (OS de Tempo Real)?
 - Pra que eu preciso de um (RT)OS?
-- Zepyhr é um RTOS?
+- Zephyr é um RTOS?
 
 --- 
 
